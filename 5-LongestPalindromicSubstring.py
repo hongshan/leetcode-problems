@@ -37,6 +37,27 @@ class Solution(object):
                         break
                 p1_left -= 1
                 p1_right += 1
+
+            # p1_left = i
+            # p1_right = i + 1
+            # while True:
+            #     print(p1_left, p1_right)
+            #     if p1_left < 0 or p1_right > total_length - 1: 
+            #         print("no hope", p1_left, p1_right)
+            #         if len(current_str) > len(longest_str):
+            #                 longest_str = current_str
+            #         break
+            #     else:
+            #         if s[p1_left] == s[p1_right]:
+            #             print("find same")
+            #             current_str = s[p1_left] + current_str + s[p1_right]
+            #         else:
+            #             if len(current_str) > len(longest_str):
+            #                 longest_str = current_str
+            #                 print("find long", longest_str)
+            #             break
+            #     p1_left -= 1
+            #     p1_right += 1
             print("next")
         return longest_str
 
