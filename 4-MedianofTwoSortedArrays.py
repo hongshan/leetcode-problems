@@ -1,4 +1,3 @@
-#coding:utf-8
 class Solution(object):
     def findMedianSortedArrays(self, nums1, nums2):
         total_len = len(nums1) + len(nums2)
@@ -18,7 +17,6 @@ class Solution(object):
         len2 = len(nums2)
         def calDet(number):
             return number/2  if (number/2) > 1 else 1
-        print("calulate from 0 k:", k)
         current_find = 0
         nums1_start = 0
         nums2_start = 0
@@ -37,15 +35,15 @@ class Solution(object):
         while current_find < k:
             current_max1, current_find1 = findByDet(current_nums1, det_find)
             current_max2, current_find2 = findByDet(current_nums2, det_find)
-            if not current_max1:
+            if current_max1 == None:
                 current_max2, current_find2 = findByDet(current_nums2, k - current_find)
-                if current_max2:
+                if current_max2 != None:
                     current_find = k
                     k_value = current_max2
                 break
-            elif not current_max2:
+            elif current_max2 == None:
                 current_max1, current_find1 = findByDet(current_nums1, k - current_find)
-                if current_max1:
+                if current_max1 != None:
                     current_find = k
                     k_value = current_max1
                 break
@@ -67,10 +65,10 @@ class Solution(object):
                 k_value = current_max1
 
         return k_value
-
-        # to be done
-            
+         
 
 # test
-test = Solution()
-print(test.findMedianSortedArrays([1,3,4,7,33,100,444,3333,33333], [1,1,1,1,1]))
+# test = Solution()
+
+# print(test.findMedianSortedArrays([0,1,3],\
+#  [0,1]))
