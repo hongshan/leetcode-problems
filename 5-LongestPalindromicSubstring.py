@@ -41,4 +41,4 @@ class Solution(object):
         return longest_str
 
 test = Solution()
-print(test.longestPalindrome("abcbghghabcdcbaff"))
+print(test.longestPalindrome("abcbghghabcddcbaff"))
