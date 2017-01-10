@@ -34,6 +34,7 @@ class Solution(object):
         total_length = len(s)
         longest_str = s[0]
         for i in range(total_length):
+            # with this little change, time decrease to 688 ms otherwise is 1029 
             prob_max_length = (total_length - i) * 2 if i + 1 > total_length - i else (i + 1) * 2
             if prob_max_length < len(longest_str):
                 continue
@@ -43,8 +44,8 @@ class Solution(object):
             longest_str = none_point_str if len(none_point_str) > len(longest_str) else longest_str
         return longest_str
 
-test = Solution()
-input_str = "abcabba"
-print(input_str, len(input_str))
-output = test.longestPalindrome(input_str)
-print(output, len(output))
+# test = Solution()
+# input_str = "abcabba"
+# print(input_str, len(input_str))
+# output = test.longestPalindrome(input_str)
+# print(output, len(output))
