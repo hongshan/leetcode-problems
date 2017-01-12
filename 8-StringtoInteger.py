@@ -11,33 +11,33 @@ class Solution(object):
                 return -2147483648
             return x
 
-        ret = 0
+        ret = ''
         signed = 1
         start = False
         for i in str:
             if i <= '9' and i >= '0':
                 if not start:
                     start = True
-                ret = ret * 10 + int(i)
+                ret += i
             elif i == '-' and start:
                 return 0
             elif i == '-' and not start:
                 start = True
-                signed = -1
+                ret += i
             elif i == '+' and start:
                 return 0
             elif i == '+' and not start:
                 start = True
             elif i == ' ':
                 if start:
-                    return getValidRet(ret * signed)
+                    return getValidRet(int(ret))
             else:
                 if not start:
                     return 0
                 else:
-                    return getValidRet(ret * signed)
+                    return getValidRet(int(ret))
         else:
-            return getValidRet(ret * signed)
+            return getValidRet(int(ret))
 from datetime import datetime
 from time import time
 test = Solution()
