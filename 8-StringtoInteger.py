@@ -5,6 +5,9 @@ class Solution(object):
         :rtype: int
         """
         def getValidRet(x):
+            if x == '' or x == '-' or x == '+':
+                return 0
+            x = int(x)
             if x > 2147483647:
                 return  2147483647
             elif x < -2147483648:
@@ -30,18 +33,18 @@ class Solution(object):
                 start = True
             elif i == ' ':
                 if start:
-                    return getValidRet(int(ret))
+                    return getValidRet(ret)
             else:
                 if not start:
                     return 0
                 else:
-                    return getValidRet(int(ret))
+                    return getValidRet(ret)
         else:
-            return getValidRet(int(ret))
+            return getValidRet(ret)
 from datetime import datetime
 from time import time
 test = Solution()
 dt = datetime.now()
 now = time()
-print(test.myAtoi("+23456789eee777"),\
+print(test.myAtoi("2"),\
     datetime.now().microsecond - dt.microsecond)
