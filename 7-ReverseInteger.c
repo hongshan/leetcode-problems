@@ -4,6 +4,6 @@ int reverse(int x) {
 }
 
 int main() {
-    unsigned int a = 1234;
+    short int a = 214783649;
     reverse(a);
 }

@@ -13,6 +13,8 @@ class Solution(object):
             a = x % 10
             out = out * 10 +  a
             x = (x - a) / 10
+        if out > 2147483647 or out < -2147483648:
+            return 0
         return out * signed
 
 test = Solution()
