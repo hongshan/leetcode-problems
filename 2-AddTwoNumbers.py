@@ -21,7 +21,6 @@ class Solution(object):
         v2 = l2.val
         leading = 0
         while l1 or l2:
-            print(v1, v2)
             sumval = v1 + v2 + leading
             leading = sumval / 10
             sumval = sumval % 10
