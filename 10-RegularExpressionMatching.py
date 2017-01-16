@@ -67,7 +67,7 @@ class StateController():
                 print("input", input)
                 print('current expection', expect_value)
                 if next_state:
-                    return True, self.states[next_state]
+                    return True, next_state
                 else:
                     return True, None
             else:
@@ -75,12 +75,12 @@ class StateController():
                 print('current expection', expect_value)
                 if input == expect_value:
                     if next_state:
-                        return True, self.states[next_state]
+                        return True, next_state
                     else:
                         return True, None
                 else:
                     if pre_common_state:
-                        return True, self.states[pre_common_state]
+                        return True, pre_common_state
                     else:
                         return False
         return nextFunction
@@ -90,17 +90,17 @@ class StateController():
             print("repet input", input, expect_value)
             if expect_value == '.*':
                 if next_expect_value and input == next_expect_value[0]:
-                    return True, self.states[next_state]
+                    return True, next_state
                 else:
-                    return True, self.states[current_state]
+                    return True, current_state
             else:
                 if next_expect_value and input == next_expect_value[0]:
-                    return True, self.states[next_state]
+                    return True, next_state
                 elif input == expect_value[0]:
-                    return True, self.states[current_state]
+                    return True, current_state
                 else:
                     if pre_common_state:
-                        return True, self.states[pre_common_state]
+                        return True, pre_common_state
                     return False
         return nextFunction
 
@@ -134,10 +134,10 @@ class StateController():
                     (self.stateToken[i], next_expect_value, \
                         i, next_state, pre_common_state))
     def accept(self, str):
-        current_state = self.states[0]
+        current_state = 0
         print(current_state)
         for i in str:
-            accepted = current_state(i)
+            accepted = self.states[current_state](i)
             print("-------", i)
             print(accepted)
             print("********")
@@ -145,7 +145,7 @@ class StateController():
                 print("accepted")
                 if accepted[0] and accepted[1] != None:
                     current_state = accepted[1]
-                else:
+                elif accepted[0] and accepted[1] == None:
                     return True
             else:
                 return False
