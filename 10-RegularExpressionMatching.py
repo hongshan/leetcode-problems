@@ -85,17 +85,17 @@ class StateController():
                         return False
         return nextFunction
     def getRepetAcceptedFunction(self, expect_value, next_expect_value, \
-        current_state, next_state, pre_common_state):
+        current_state, next_next_state, pre_common_state):
         def nextFunction(input):
-            print("repet input", input, expect_value)
+            print("repet input", input, expect_value, next_expect_value)
             if expect_value == '.*':
                 if next_expect_value and input == next_expect_value[0]:
-                    return True, next_state
+                    return True, next_next_state
                 else:
                     return True, current_state
             else:
                 if next_expect_value and input == next_expect_value[0]:
-                    return True, next_state
+                    return True, next_next_state
                 elif input == expect_value[0]:
                     return True, current_state
                 else:
@@ -113,6 +113,7 @@ class StateController():
             next_state = None
             pre_common_state = None
             next_expect_value = None
+            next_next_state = None
             if len(self.stateToken[i]) == 1:
                 if i + 1 < len(self.stateToken):
                     next_state = i + 1
@@ -126,13 +127,16 @@ class StateController():
                 if i + 1 < len(self.stateToken):
                     next_state = i + 1
                     next_expect_value = self.stateToken[i + 1]
+                    if next_state + 1 < len(self.stateToken):
+                        print("next-next")
+                        next_next_state = next_state + 1
                 for j in range(i, 0):
                     if self.stateToken[j] == ".*":
                         pre_common_state = j
                         break
                 self.states.append(self.getRepetAcceptedFunction\
                     (self.stateToken[i], next_expect_value, \
-                        i, next_state, pre_common_state))
+                        i, next_next_state, pre_common_state))
     def accept(self, str):
         current_state = 0
         print(current_state)
@@ -142,20 +146,20 @@ class StateController():
             print(accepted)
             print("********")
             if accepted:
-                print("accepted")
+                print("next state", accepted[1])
                 if accepted[0] and accepted[1] != None:
                     current_state = accepted[1]
                 elif accepted[0] and accepted[1] == None:
                     return True
             else:
                 return False
-        if current_state == None:
+        if current_state == len(self.states) - 1:
             return True
         else:
             return False
 
-test = StateController("a*b*b")
-teststr = "ab"
+test = StateController("a*b*bc")
+teststr = "abbbbbbbc"
 test.genstates()
 print("accept", test.accept(teststr))
 
