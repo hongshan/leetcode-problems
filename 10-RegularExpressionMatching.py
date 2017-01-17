@@ -155,11 +155,11 @@ class StateController():
         for index in range(len(str)):
             i = str[index]
             accepted = self.states[current_state](i)
-            # print("-------", i)
-            # print(accepted)
-            # print("********")
+            print("-------", i)
+            print(accepted)
+            print("********")
             if accepted:
-                # print("next state", accepted[1])
+                print("next state", accepted[1])
                 if accepted[0] and accepted[1] != None:
                     current_state = accepted[1]
                 elif accepted[0] and accepted[1] == None:
