@@ -102,12 +102,14 @@ class StateController():
             # print("repet input", input, expect_value, next_expect_value)
             if expect_value == '.*':
                 if next_expect_value and input == next_expect_value[0]:
-                    return True, next_next_state + 1
+                    return True, next_next_state + 1\
+                    if next_next_state + 1 < len(self.states) else None
                 else:
                     return True, current_state
             else:
                 if next_expect_value and input == next_expect_value[0]:
-                    return True, next_next_state
+                    return True, next_next_state + 1 \
+                    if next_next_state + 1 < len(self.states) else None
                 elif input == expect_value[0]:
                     return True, current_state
                 else:
@@ -155,11 +157,9 @@ class StateController():
         for index in range(len(str)):
             i = str[index]
             accepted = self.states[current_state](i)
-            print("-------", i)
+            print("input", i)
             print(accepted)
-            print("********")
             if accepted:
-                print("next state", accepted[1])
                 if accepted[0] and accepted[1] != None:
                     current_state = accepted[1]
                 elif accepted[0] and accepted[1] == None:
@@ -170,19 +170,20 @@ class StateController():
             else:
                 return False
         # input is too short, to check if the rest state can be end state
-        if current_state == len(self.states) - 1:
-            return True
-        else:
-            for i in range(current_state,len(self.states)):
-                if len(self.stateToken[i]) == 2:
-                    continue
-                else:
-                    return False
+        # if current_state == len(self.states) - 1:
+        #     print("hkkkk")
+        #     return True
+        # else:
+        for i in range(current_state,len(self.states)):
+            if len(self.stateToken[i]) == 2:
+                continue
+            else:
+                return False
 
-            return True
+        return True
 
 test = Solution()
-teststr = "a"
-print("accept", test.isMatch(teststr, "aa"))
+teststr = "abcdefcbc"
+print("accept", test.isMatch(teststr, "aa*.*bc"))
 
 
