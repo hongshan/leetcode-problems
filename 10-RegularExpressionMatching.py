@@ -133,9 +133,29 @@ class StateController():
                         else:
                             current_state[self.stateToken[j][0]] = j
                     else:
-                        current_state[self.stateToken[j]] = j + 1
+                        the_last_same_t = j
+                        if t[0] == self.stateToken[j]:
+                            current_state[t[0]] = j
+                            for k in range(j + 1,len(self.stateToken)):
+                                if len(self.stateToken[k]) == 2:
+                                    continue
+                                else:
+                                    if t[0] == self.stateToken[k]:
+                                        the_last_same_t = k
+                                    else:
+                                        break
+                        if not self.states.get(the_last_same_t):
+                            self.states[the_last_same_t] = {t[0]: the_last_same_t}
+                        else:
+                            self.states[the_last_same_t][t[0]] = the_last_same_t
+                        for k in current_state:
+                            self.states[the_last_same_t][k] = current_state[k]
                         break
-            self.states[i] = current_state
+            if self.states.get(i):
+                for k in current_state:
+                    self.states[k] = current_state[k]
+            else:
+                self.states[i] = current_state
             
         print(self.states)
 
@@ -169,7 +189,7 @@ class StateController():
                 return True
 
 test = Solution()
-teststr = "abcdefcbc"
-print("accept", test.isMatch(teststr, "a.*b*b*c*bc"))
+teststr = "a"
+print("accept", test.isMatch(teststr, "a*b*a"))
 
 
