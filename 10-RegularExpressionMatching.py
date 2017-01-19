@@ -127,14 +127,13 @@ class StateController():
                 else:
                     current_state['others'] = i
                 for j in range(i + 1, len(self.stateToken)):
-                    print(i, self.stateToken[j])
                     if len(self.stateToken[j]) == 2:
                         if self.stateToken[j] == ".*":
                             current_state['others'] = j
                         else:
                             current_state[self.stateToken[j][0]] = j
                     else:
-                        current_state[self.stateToken[j]] = j
+                        current_state[self.stateToken[j]] = j + 1
                         break
             self.states[i] = current_state
             
