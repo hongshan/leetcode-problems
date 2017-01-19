@@ -7,7 +7,7 @@ class Solution(object):
         """
 
         test = StateController(p)
-        # return test.accept(s)
+        return test.accept(s)
 
 class StateController():
     """docstring for StateController"""
@@ -44,10 +44,10 @@ class StateController():
                 temp_token.append(self.pattern[i])
                 i += 1
         i = 0
-        # print("tmp token:", temp_token)
+        print('first step', temp_token)
+        # make b*b*b to bb*
+        temp_token1 = []
         while i < len(temp_token):
-            # self.stateToken.append(temp_token[i])
-            # print(i)
             j = i + 1
             if len(temp_token[i]) == 2:
                 while j < len(temp_token):
@@ -55,80 +55,56 @@ class StateController():
                         break
                     j += 1
                 else:
-                    self.stateToken.append(temp_token[i])
+                    temp_token1.append(temp_token[i])
                     break
                 if temp_token[i][0] == temp_token[j][0]:
-                    self.stateToken.append(temp_token[j])
+                    temp_token1.append(temp_token[j])
                     temp_token[j] = temp_token[i]
-                    # self.stateToken.append(temp_token[i])
+                    # temp_token1.append(temp_token[i])
                     i = j
                 else:
-                    self.stateToken.append(temp_token[i])
+                    temp_token1.append(temp_token[i])
                     i = j
             else:
-                self.stateToken.append(temp_token[i])
+                temp_token1.append(temp_token[i])
                 i += 1
+        print('second step', temp_token1)
+        # make b*.*c* to .*
+        i = 0
+        while i < len(temp_token1):
+            if len(temp_token1[i]) == 2:
+                find_common_symbol = False
+                for j in range(i, len(temp_token1)):
+                    if len(temp_token1[j]) == 2:
+                        if temp_token1[j] == '.*':
+                            find_common_symbol = True
+                        continue
+                    else:
+                        if find_common_symbol:
+                            self.stateToken.append('.*')
+                            self.stateToken.append(temp_token1[j])
+                        else:
+                            self.stateToken += temp_token1[i:j+1]
+                        i = j+1
+                        break
+                else:
+                    if find_common_symbol != None:
+                        self.stateToken.append('.*')
+                    else:
+                        self.stateToken.append(temp_token1[i:j])
+                    i = j
+            else:
+                self.stateToken.append(temp_token1[i])
+                i += 1
+        print(self.stateToken)
 
-        # print("token:", self.stateToken)
         return True
-    def getSingleAcceptedFunction(self, expect_value, next_state, pre_common_state):
-        def nextFunction(input):
-            # print("============")
-            if expect_value == '.':
-                # print("input", input)
-                # print('current expection', expect_value)
-                if next_state:
-                    return True, next_state
-                else:
-                    return True, None
-            else:
-                # print("input", input)
-                # print('current expection', expect_value)
-                if input == expect_value:
-                    if next_state:
-                        return True, next_state
-                    else:
-                        return True, None
-                else:
-                    if pre_common_state:
-                        # print("pre_common_state", pre_common_state)
-                        return self.states[pre_common_state](input)
-                    else:
-                        return False
-        return nextFunction
-    def getRepetAcceptedFunction(self, expect_value, next_expect_value, \
-        current_state, next_next_state, pre_common_state):
-        def nextFunction(input):
-            # print("repet input", input, expect_value, next_expect_value)
-            if expect_value == '.*':
-                if next_expect_value and input == next_expect_value[0]:
-                    return True, next_next_state + 1\
-                    if next_next_state + 1 < len(self.states) else None
-                else:
-                    return True, current_state
-            else:
-                if next_expect_value and input == next_expect_value[0]:
-                    return True, next_next_state + 1 \
-                    if next_next_state + 1 < len(self.states) else None
-                elif input == expect_value[0]:
-                    return True, current_state
-                else:
-                    if pre_common_state:
-                        # print("pre common .*", pre_common_state)
-                        return self.states[pre_common_state](input)
-                    return False
-        return nextFunction
+
     def find_precommon_state(self, current):
         for i in range(0, current):
             if self.stateToken[i] == '.*':
                 return i
         return None
-    def find_nextcommon_state(self, current):
-            if current + 1 < len(self.stateToken) and \
-                self.stateToken[current + 1] == '.*':
-                return current + 1
-            else:
-                None
     def genstates(self):
         self.preProcessPattern()
         for i in range(len(self.stateToken)):
@@ -165,40 +141,36 @@ class StateController():
         print(self.states)
 
     def accept(self, str):
-        current_state = 0
-        # print(current_state)
+        current_state_number = 0
+        
         if len(self.states) == 0:
             return False
         for index in range(len(str)):
-            i = str[index]
-            accepted = self.states[current_state](i)
-            print("input", i)
-            print(accepted)
-            if accepted:
-                if accepted[0] and accepted[1] != None:
-                    current_state = accepted[1]
-                elif accepted[0] and accepted[1] == None:
-                    if index == len(str) - 1:
-                        return True
-                    else:
+            print("current state", current_state_number)
+            input_ch = str[index]
+            print("input char", input_ch)
+            if current_state_number < len(self.states):
+                state = self.states[current_state_number]
+                print(state)
+                if state.get(input_ch):
+                    current_state_number = state.get(input_ch)
+                elif state.get('others'):
+                    current_state_number = state.get('others')
+                else:
+                    return False
+            else:
+                return False
+        else:
+            if current_state_number == len(self.states):
+                return True
+            else:
+                for i in range(current_state_number,len(self.states)):
+                    if len(self.stateToken[i])  ==  1:
                         return False
-            else:
-                return False
-        # input is too short, to check if the rest state can be end state
-        # if current_state == len(self.states) - 1:
-        #     print("hkkkk")
-        #     return True
-        # else:
-        for i in range(current_state,len(self.states)):
-            if len(self.stateToken[i]) == 2:
-                continue
-            else:
-                return False
-
-        return True
+                return True
 
 test = Solution()
 teststr = "abcdefcbc"
-print("accept", test.isMatch(teststr, "a.*bc*bc"))
+print("accept", test.isMatch(teststr, "a.*b*b*c*bc"))
 
 
