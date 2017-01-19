@@ -7,14 +7,14 @@ class Solution(object):
         """
 
         test = StateController(p)
-        return test.accept(s)
+        # return test.accept(s)
 
 class StateController():
     """docstring for StateController"""
     def __init__(self, pattern):
         self.pattern = pattern
         self.stateToken = []
-        self.states = []
+        self.states = {}
         self.genstates()
     def checkPatternValid(self):
         if len(self.pattern) == 0:
@@ -118,37 +118,52 @@ class StateController():
                         return self.states[pre_common_state](input)
                     return False
         return nextFunction
-
+    def find_precommon_state(self, current):
+        for i in range(0, current):
+            if self.stateToken[i] == '.*':
+                return i
+        return None
+    def find_nextcommon_state(self, current):
+            if current + 1 < len(self.stateToken) and \
+                self.stateToken[current + 1] == '.*':
+                return current + 1
+            else:
+                None
     def genstates(self):
         self.preProcessPattern()
         for i in range(len(self.stateToken)):
+            current_state = {'state_name': i}
+            t = self.stateToken[i]
+            if len(t) == 1:
+                if t == '.':
+                    current_state[t] = i + 1
+                else:
+                    current_state[t] = i + 1
+                    pre_state = self.find_precommon_state(i)
+                    if pre_state != None:
+                        current_state['others'] = pre_state
+            else:
+                if t[0] != '.':
+                    current_state[t[0]] = i
+                    pre_state = self.find_precommon_state(i)
+                    if pre_state != None:
+                        current_state['others'] = pre_state
+                else:
+                    current_state['others'] = i
+                for j in range(i + 1, len(self.stateToken)):
+                    print(i, self.stateToken[j])
+                    if len(self.stateToken[j]) == 2:
+                        if self.stateToken[j] == ".*":
+                            current_state['others'] = j
+                        else:
+                            current_state[self.stateToken[j][0]] = j
+                    else:
+                        current_state[self.stateToken[j]] = j
+                        break
+            self.states[i] = current_state
+            
+        print(self.states)
 
-            # self.states.append([])
-            # current_state = self.states[len(self.states) - 1]
-            next_state = None
-            pre_common_state = None
-            next_expect_value = None
-            next_next_state = None
-            if len(self.stateToken[i]) == 1:
-                if i + 1 < len(self.stateToken):
-                    next_state = i + 1
-                for j in range(0, i):
-                    if self.stateToken[j] == ".*":
-                        pre_common_state = j
-                        break
-                self.states.append(self.getSingleAcceptedFunction\
-                    (self.stateToken[i], next_state, pre_common_state))
-            elif len(self.stateToken[i]) == 2:
-                if i + 1 < len(self.stateToken):
-                    next_state = i + 1
-                    next_expect_value = self.stateToken[i + 1]
-                for j in range(0, i):
-                    if self.stateToken[j] == ".*":
-                        pre_common_state = j
-                        break
-                self.states.append(self.getRepetAcceptedFunction\
-                    (self.stateToken[i], next_expect_value, \
-                        i, next_state, pre_common_state))
     def accept(self, str):
         current_state = 0
         # print(current_state)
@@ -184,6 +199,6 @@ class StateController():
 
 test = Solution()
 teststr = "abcdefcbc"
-print("accept", test.isMatch(teststr, "aa*.*bc"))
+print("accept", test.isMatch(teststr, "a.*bc*bc"))
 
 
