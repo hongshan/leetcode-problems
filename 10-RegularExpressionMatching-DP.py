@@ -6,10 +6,11 @@ class Solution(object):
         :rtype: bool
         """
         pattern = self.preProcessPattern(p)
-        if pattern:
-            return self.accept(s, pattern)
-        else:
-            return False
+        print(pattern)
+        # if pattern:
+        #     return self.accept(s, pattern)
+        # else:
+        #     return False
 
     def _checkPatternValid(self, rawPattern):
         if len(rawPattern) == 0:
@@ -79,39 +80,40 @@ class Solution(object):
                             ret_token.append(temp_token1[j])
                         else:
                             ret_token += temp_token1[i:j+1]
-                        i = j+1
+                        i = j + 1
                         break
                 else:
-                    if find_common_symbol != None:
+                    if find_common_symbol == True:
                         ret_token.append('.*')
                     else:
-                        ret_token.append(temp_token1[i:j])
-                    i = j
+                        ret_token += temp_token1[i:j+1]
+                    i = j + 1
             else:
                 ret_token.append(temp_token1[i])
                 i += 1
-        return ret_token
         
+        return ret_token
+    def matchone():
+          pass  
     def accept(self, str, pattern):
         print('str, pattern', str, pattern)
-        if len(str) == 0:
-            return True if len(pattern) == 0 else False
-        else:
-            if len(pattern[0]) == 1:
-                if str[0] == pattern[0]:
-                    return self.accept(str[1:], pattern[1:])
-                else:
-                    return False
+        if len(pattern) == 0:
+            return True if len(str) == 0 else False
+
+        if len(pattern[0]) == 1:
+            if str and str[0] == pattern[0] or pattern[0] == '.' :
+                return self.accept(str[1:], pattern[1:])
             else:
-                if self.accept(str, pattern[1:]): 
-                    return True
-                else:
-                    if str[0] == pattern[0][0]:
-                         str = str[1:]
-                    else: return False
+                return False
+        else:
+            if self.accept(str, pattern[1:]):
+                return True
+            else:
+                if str and str[0] == pattern[0][0] or pattern[0][0] == '.':
+                    return self.accept(str[1:], pattern)
+                else: return False
 
 test = Solution()
-teststr = "ab"
-print("accept", test.isMatch(teststr, "a*a*.*b*ab"))
-
+teststr = "aa"
+print("accept", test.isMatch(teststr, "a"))
 
