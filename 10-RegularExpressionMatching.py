@@ -7,7 +7,7 @@ class Solution(object):
         """
 
         test = StateController(p)
-        return test.accept(s)
+        # return test.accept(s)
 
 class StateController():
     """docstring for StateController"""
@@ -99,65 +99,38 @@ class StateController():
         print(self.stateToken)
 
         return True
-
-    def find_precommon_state(self, current):
-        for i in range(0, current):
-            if self.stateToken[i] == '.*':
-                return i
-        return None
+    def pprpcess(self, pattern, input_ch):
+        accept = False
+        if pattern[0] == input_ch || pattern[0] == '.':
+            accept = True
+        return accept
     def genstates(self):
         self.preProcessPattern()
-        for i in range(len(self.stateToken)):
-            current_state = {'state_name': i}
-            t = self.stateToken[i]
-            if len(t) == 1:
-                if t == '.':
-                    current_state[t] = i + 1
-                else:
-                    current_state[t] = i + 1
-                    pre_state = self.find_precommon_state(i)
-                    if pre_state != None:
-                        current_state['others'] = pre_state
-            else:
-                if t[0] != '.':
-                    current_state[t[0]] = i
-                    pre_state = self.find_precommon_state(i)
-                    if pre_state != None:
-                        current_state['others'] = pre_state
-                else:
-                    current_state['others'] = i
-                for j in range(i + 1, len(self.stateToken)):
-                    if len(self.stateToken[j]) == 2:
-                        if self.stateToken[j] == ".*":
-                            current_state['others'] = j
-                        else:
-                            current_state[self.stateToken[j][0]] = j
-                    else:
-                        the_last_same_t = j
-                        if t[0] == self.stateToken[j]:
-                            current_state[t[0]] = j
-                            for k in range(j + 1,len(self.stateToken)):
-                                if len(self.stateToken[k]) == 2:
-                                    continue
-                                else:
-                                    if t[0] == self.stateToken[k]:
-                                        the_last_same_t = k
-                                    else:
-                                        break
-                        if not self.states.get(the_last_same_t):
-                            self.states[the_last_same_t] = {t[0]: the_last_same_t}
-                        else:
-                            self.states[the_last_same_t][t[0]] = the_last_same_t
-                        for k in current_state:
-                            self.states[the_last_same_t][k] = current_state[k]
+        for i in range(0, len(self.stateToken)):
+            current_state = {}
+            p = self.stateToken[i]
+            current_state[p[0]] = []
+            if len(p) == 1:
+                for j in range(j,len(self.stateToken)):
+                    accept = self.pprpcess(self.stateToken[j], p[0])
+                    if len(self.stateToken[j]) == 1:
+                        current_state[p].append(j)
                         break
-            if self.states.get(i):
-                for k in current_state:
-                    self.states[k] = current_state[k]
+                    else:
+                        if accept:
+                            current_state[p].append(j)
             else:
-                self.states[i] = current_state
-            
+                for j in range(i,len(self.stateToken)):
+                    accept = self.pprpcess(self.stateToken[j], p[0])
+                    if accept:
+                        current_state[p].append(j)
+                    if len(self.stateToken[j]) == 1:
+                        break
+
+
         print(self.states)
+        return self.states
+        
 
     def accept(self, str):
         current_state_number = 0
