@@ -6,16 +6,10 @@ class Solution(object):
         :rtype: bool
         """
         pattern = self.preProcessPattern(p)
-        print(pattern)
-        # if pattern:
-        #     return self.accept(s, pattern)
-        # else:
-        #     return False
+        return self.accept(s, pattern)
 
     def _checkPatternValid(self, rawPattern):
-        if len(rawPattern) == 0:
-            return False
-        if rawPattern[0] == '*':
+        if rawPattern and rawPattern[0] == '*':
             return False
         i = 1
         while i < len(rawPattern):
@@ -30,8 +24,7 @@ class Solution(object):
         ret_token = []
         if not self._checkPatternValid(rawPattern):
             return False
-        if len(rawPattern) <= 1:
-            temp_token.append(rawPattern)
+        # make str to a list like ['a', 'a*']
         i = 0
         while i < len(rawPattern):
             if i + 1 < len(rawPattern) and rawPattern[i+1] == '*':
@@ -41,7 +34,7 @@ class Solution(object):
                 temp_token.append(rawPattern[i])
                 i += 1
         i = 0
-        # make b*b*b to bb*
+        # make ['b*', 'b*', 'b'] to ['b', 'b*']
         temp_token1 = []
         while i < len(temp_token):
             j = i + 1
@@ -64,7 +57,7 @@ class Solution(object):
             else:
                 temp_token1.append(temp_token[i])
                 i += 1
-        # make b*.*c* to .*
+        # make ['b*', 'c*', '.*'] to ['.*']
         i = 0
         while i < len(temp_token1):
             if len(temp_token1[i]) == 2:
@@ -96,12 +89,12 @@ class Solution(object):
     def matchone():
           pass  
     def accept(self, str, pattern):
-        print('str, pattern', str, pattern)
+        # print('str, pattern', str, pattern)
         if len(pattern) == 0:
             return True if len(str) == 0 else False
 
         if len(pattern[0]) == 1:
-            if str and str[0] == pattern[0] or pattern[0] == '.' :
+            if str and (str[0] == pattern[0] or pattern[0] == '.') :
                 return self.accept(str[1:], pattern[1:])
             else:
                 return False
@@ -109,11 +102,11 @@ class Solution(object):
             if self.accept(str, pattern[1:]):
                 return True
             else:
-                if str and str[0] == pattern[0][0] or pattern[0][0] == '.':
+                if str and (str[0] == pattern[0][0] or pattern[0][0] == '.'):
                     return self.accept(str[1:], pattern)
                 else: return False
 
-test = Solution()
-teststr = "aa"
-print("accept", test.isMatch(teststr, "a"))
+# test = Solution()
+# teststr = ""
+# print("accept", test.isMatch("abef", ".*b*c*f"))
 
