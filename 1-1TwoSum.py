@@ -12,14 +12,14 @@ class Solution(object):
             else:
                 nums_dict[nums[i]] = []
                 nums_dict[nums[i]].append(i)
-        print(nums_dict)
-        for i in range(0,target/2 + 1):
-            left = nums_dict.get(i)
-            right = nums_dict.get(target-i)
-            if left != None and right != None:
-                if i == target-i:
-                    return  left[0], left[1]
+        for i in range(len(nums)):
+            right = nums_dict.get(target - nums[i])
+            if right != None:
+                if nums[i] == target - nums[i]:
+                    if len(right) >= 2:
+                        return right[0], right[1]
                 else:
-                    return left[0], right[0]
+                    return i, right[0]
+
 test = Solution()
-print(test.twoSum([3,3,4], 6))
+print(test.twoSum([3,2,4], 6))
