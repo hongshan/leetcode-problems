@@ -1,35 +1,67 @@
 class Solution(object):
+    def findRoman(self, num):
+        num_map = {
+          1: 'I',
+          2: 'II',
+          3: 'III',
+          4: 'IV',
+          5: 'V',
+          6: 'VI',
+          7: 'VII',
+          8: 'VIII',
+          9: 'IX',
+          10: 'X',
+          20: 'XX',
+          30: 'XXX',
+          40: 'XL',
+          50: 'L',
+          60: 'LX',
+          70: 'LXX',
+          80: 'LXXX',
+          90: 'XC',
+          100: 'C',
+          200: 'CC',
+          300: 'CCC',
+          400: 'CD',
+          500: 'D',
+          600: 'DC',
+          700: 'DCC',
+          800: 'DCCC',
+          900: 'CM',
+          1000: 'M',
+          2000: 'MM',
+          3000: 'MMM',
+        }
+        ret = num_map.get(num)
+        if ret :
+          return True, ret
+        else:
+          return False
+    def divide(self, num):
+      base = 10
+      while num % base == 0:
+        base *= 10
+      else:
+        return num - num % base, num % base
+
+
     def intToRoman(self, num):
         """
         :type num: int
-        :rtype: str
-        分解过程 
-        1. 做减法 479 = 500 - 21 21不满足放在左边的条件所以走加法路线 
-        2. 做加法 479 = 400 + 79
-                       500 - 100 + 50 + 29 
-                       CDL + 20 + 9
-                       CDL + 10 + 10 + 10 - 1 
-                       CDLXXIX
-                479 = 470 + 9
-                    470 + IX
-                    400 + 70 + 9
-                    500 - 100 + 50 + 20 + 9
-                   （500 - 100） + 50 + 10 + 10 + （10 - 1）
-                789 = 780 + 9
-                      700 + 80 + 10-1
-                      500 + 200 + 80 + 10-1
-                      500 + 100+100 + 50+10+10+10 + 10 -1
-                      DCCLXXXIX
-                
-
+        :rtype: str 
         """
-        decimal_set = set(1,  5,   10,  50, 100,  500, 1000)
-        roman_set = set( 'I', 'V', 'X', 'L', 'C', 'D', 'M')
-        
-        # i = 1
-        # while num > 0:
-        #     tmp = num % 10
-
-
+        ret = ''
+        left, right = self.divide(num)
+        if right:
+          finded = self.findRoman(right)
+          if finded:
+            ret = finded[1] + ret
+        if left:
+          finded = self.findRoman(left)
+          if finded:
+            ret = finded[1] + ret
+          else:
+            ret = self.intToRoman(left) + ret
+        return ret
 # test = Solution()
-# print(test.maxArea([1,2,9,7,9,9]))
+# print(test.intToRoman(2034))
