@@ -1,10 +1,6 @@
-package main
+package gleetcode
 
-import (
-	"fmt"
-)
-
-func twoSum(nums []int, target int) []int {
+func TwoSum2(nums []int, target int) []int {
 	type element []int
 	hash_map := make(map[int]element)
 	for i := 0; i < len(nums); i++ {
@@ -26,7 +22,4 @@ func twoSum(nums []int, target int) []int {
 		}
 	}
 	return []int{}
-}
-func main() {
-	fmt.Println(twoSum([]int{3, 3, 4}, 6))
 }
